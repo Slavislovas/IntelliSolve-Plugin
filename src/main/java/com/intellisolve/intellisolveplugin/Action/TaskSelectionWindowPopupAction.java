@@ -8,11 +8,18 @@ import com.intellisolve.intellisolveplugin.Wrapper.TaskSelectionDialogWrapper;
 import com.intellisolve.intellisolveplugin.Wrapper.TaskSolutionDialogWrapper;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class TaskSelectionWindowPopupAction extends AnAction{
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        TaskSelectionDialogWrapper taskSelectionDialogWrapper = new TaskSelectionDialogWrapper(true);
+        TaskSelectionDialogWrapper taskSelectionDialogWrapper = null;
+        try {
+            taskSelectionDialogWrapper = new TaskSelectionDialogWrapper(true);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         if (taskSelectionDialogWrapper.showAndGet()){
             Task selectedTask = taskSelectionDialogWrapper.getSelectedTask();

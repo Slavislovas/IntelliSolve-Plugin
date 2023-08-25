@@ -32,7 +32,7 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
         if (task != null){
             taskName = label(task.getName(), 50, true);
             taskDescription = label(task.getDescription(), 30, false);
-            taskCode.setText(task.getCode());
+            taskCode.setText(task.getMethodCode());
         }
 
         init();
@@ -56,7 +56,7 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
     public void doCancelAction() {
         task.setName(taskName.getText());
         task.setDescription(taskDescription.getText());
-        task.setCode(taskCode.getText());
+        task.setMethodCode(taskCode.getText());
         super.doCancelAction();
     }
 

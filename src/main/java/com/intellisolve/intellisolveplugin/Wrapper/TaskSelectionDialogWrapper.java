@@ -11,11 +11,13 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellisolve.intellisolveplugin.Model.Task;
+import com.intellisolve.intellisolveplugin.Util.IntelliSolveServerConnection;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +26,9 @@ public class TaskSelectionDialogWrapper extends DialogWrapper {
     private JPanel panel = new JPanel(new GridBagLayout());
     private JTable taskTable = new JBTable();
     private List<Task> taskList = new ArrayList<>();
+    private IntelliSolveServerConnection serverConnection = new IntelliSolveServerConnection();
 
-    public TaskSelectionDialogWrapper(boolean canBeParent) {
+    public TaskSelectionDialogWrapper(boolean canBeParent) throws IOException {
         super(canBeParent);
         setTitle("IntelliSolve");
         setOKButtonText("Select Task");
@@ -56,23 +59,12 @@ public class TaskSelectionDialogWrapper extends DialogWrapper {
         taskTable.getColumnModel().getColumn(0).setResizable(false);
     }
 
-    private void populateTaskSelectionTable(){
-        //retrieve tasks and add them to list
-        Task demoTask1 = new Task("test1", "test1", "test1", "test1");
-        Task demoTask2 = new Task("test2", "test2", "test2", "test2");;
-        Task demoTask3 = new Task("test3", "test3", "test3", "test3");;
-        Task demoTask4 = new Task("test4", "test4", "test4", "test4");;
-
-        taskList.add(demoTask1);
-        taskList.add(demoTask2);
-        taskList.add(demoTask3);
-        taskList.add(demoTask4);
-
+    private void populateTaskSelectionTable() throws IOException {
+        taskList = serverConnection.getAllTasks();
         DefaultTableModel tableModel = (DefaultTableModel) taskTable.getModel();
-
         for (Task task:
                 taskList) {
-            tableModel.addRow(new String[]{task.getId(), task.getName(), "Easy"});
+            tableModel.addRow(new String[]{task.getId(), task.getName(), task.getDifficulty().name()});
         }
         taskTable.setModel(tableModel);
     }

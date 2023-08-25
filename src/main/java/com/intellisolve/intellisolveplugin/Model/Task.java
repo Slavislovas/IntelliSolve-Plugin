@@ -1,32 +1,33 @@
 package com.intellisolve.intellisolveplugin.Model;
 
+import com.intellisolve.intellisolveplugin.Enum.Difficulty;
+
 public class Task {
     private String id;
     private String name;
     private String description;
-    private String code;
-    private Boolean selected = false;
+    private String baseCode;
+    private String methodCode;
+    private Difficulty difficulty;
 
-    public Task(String id, String name, String description, String code){
+    private Boolean selected;
+
+    public Task(String id, String name, String description, String baseCode, String methodCode, Difficulty difficulty) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.code = code;
+        this.baseCode = baseCode;
+        this.methodCode = methodCode;
+        this.difficulty = difficulty;
     }
 
     public Task(){
         this.id = "default";
         this.name = "default";
         this.description = "default";
-        this.code = "default";
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code){
-        this.code = code;
+        this.baseCode = "default";
+        this.methodCode = "default";
+        this.difficulty = Difficulty.Easy;
     }
 
     public String getId() {
@@ -51,6 +52,30 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBaseCode() {
+        return baseCode;
+    }
+
+    public void setBaseCode(String baseCode) {
+        this.baseCode = baseCode;
+    }
+
+    public String getMethodCode() {
+        return methodCode;
+    }
+
+    public void setMethodCode(String methodCode) {
+        this.methodCode = methodCode;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 
     public Boolean getSelected() {
