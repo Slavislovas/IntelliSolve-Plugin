@@ -26,7 +26,7 @@ public class TaskSelectionDialogWrapper extends DialogWrapper {
     private JPanel panel = new JPanel(new GridBagLayout());
     private JTable taskTable = new JBTable();
     private List<Task> taskList = new ArrayList<>();
-    private IntelliSolveServerConnection serverConnection = new IntelliSolveServerConnection();
+    private IntelliSolveServerConnection serverConnection = IntelliSolveServerConnection.getInstance();
 
     public TaskSelectionDialogWrapper(boolean canBeParent) throws IOException {
         super(canBeParent);

@@ -6,17 +6,17 @@ public class Task {
     private String id;
     private String name;
     private String description;
-    private String baseCode;
+    private String classCode;
     private String methodCode;
     private Difficulty difficulty;
 
     private Boolean selected;
 
-    public Task(String id, String name, String description, String baseCode, String methodCode, Difficulty difficulty) {
+    public Task(String id, String name, String description, String classCode, String methodCode, Difficulty difficulty) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.baseCode = baseCode;
+        this.classCode = classCode;
         this.methodCode = methodCode;
         this.difficulty = difficulty;
     }
@@ -25,7 +25,7 @@ public class Task {
         this.id = "default";
         this.name = "default";
         this.description = "default";
-        this.baseCode = "default";
+        this.classCode = "default";
         this.methodCode = "default";
         this.difficulty = Difficulty.Easy;
     }
@@ -54,12 +54,12 @@ public class Task {
         this.description = description;
     }
 
-    public String getBaseCode() {
-        return baseCode;
+    public String getClassCode() {
+        return classCode;
     }
 
-    public void setBaseCode(String baseCode) {
-        this.baseCode = baseCode;
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 
     public String getMethodCode() {

@@ -1,5 +1,6 @@
 package com.intellisolve.intellisolveplugin.Action;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
@@ -8,7 +9,8 @@ import com.intellisolve.intellisolveplugin.Util.PluginSettings;
 import com.intellisolve.intellisolveplugin.Wrapper.TaskSolutionDialogWrapper;
 import org.jetbrains.annotations.NotNull;
 
-public class ContinueTaskWindowPopupAction extends AnAction {
+public class SolveTaskWindowPopupAction extends AnAction {
+    private ActionManager actionManager = ActionManager.getInstance();
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Task task = PluginSettings.getInstance().getState();
@@ -16,7 +18,11 @@ public class ContinueTaskWindowPopupAction extends AnAction {
             Messages.showErrorDialog("Please select a new task by selecting the button 'Select Task'", "Task not selected");
         } else{
             TaskSolutionDialogWrapper taskSolutionDialogWrapper = new TaskSolutionDialogWrapper(true);
-            taskSolutionDialogWrapper.show();
+            if (taskSolutionDialogWrapper.showAndGet()){
+                actionManager.getAction("IntelliSolve.Actions.CodeAnalysisResultsWindowPopupAction").actionPerformed(e);
+            } else{
+                actionManager.getAction("IntelliSolve.Actions.TaskSelectionWindowPopupAction").actionPerformed(e);
+            }
         }
     }
 }

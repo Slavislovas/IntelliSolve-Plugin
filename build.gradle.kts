@@ -10,6 +10,12 @@ repositories {
     mavenCentral()
 }
 
+dependencies{
+    implementation("com.fifesoft:rsyntaxtextarea:3.3.4")
+    implementation("com.fifesoft:languagesupport:3.3.0")
+    implementation("com.fifesoft:spellchecker:3.3.1")
+}
+
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {

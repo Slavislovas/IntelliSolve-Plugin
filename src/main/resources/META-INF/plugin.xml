@@ -31,9 +31,11 @@
             <action class="com.intellisolve.intellisolveplugin.Action.TaskSelectionWindowPopupAction"
                 id="IntelliSolve.Actions.TaskSelectionWindowPopupAction"
                 text="Select Task"/>
-            <action class="com.intellisolve.intellisolveplugin.Action.ContinueTaskWindowPopupAction"
-                    id="IntelliSolve.Actions.ContinueTaskWindowPopupAction"
+            <action class="com.intellisolve.intellisolveplugin.Action.SolveTaskWindowPopupAction"
+                    id="IntelliSolve.Actions.SolveTaskWindowPopupAction"
                     text="Continue Task"/>
         </group>
+        <action class="com.intellisolve.intellisolveplugin.Action.CodeAnalysisResultsWindowPopupAction"
+                id="IntelliSolve.Actions.CodeAnalysisResultsWindowPopupAction"/>
     </actions>
 </idea-plugin>
