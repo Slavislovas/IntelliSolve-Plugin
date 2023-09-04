@@ -1,17 +1,19 @@
 package com.intellisolve.intellisolveplugin.Wrapper;
 
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.uiDesigner.core.AbstractLayout;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import com.intellisolve.intellisolveplugin.Model.Task;
-import com.intellisolve.intellisolveplugin.Util.PluginSettings;
+import com.intellisolve.intellisolveplugin.Util.TaskState;
+import org.fife.rsta.ac.java.JavaCompletionProvider;
+import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,9 +21,9 @@ import java.awt.*;
 
 public class TaskSolutionDialogWrapper extends DialogWrapper {
     private JPanel panel = new JPanel(new GridBagLayout());
-    private JBLabel taskName = new JBLabel();
-    private JTextArea taskDescription = new JTextArea();
-    private RSyntaxTextArea taskCode = new RSyntaxTextArea();
+    private JBLabel taskName;
+    private JTextArea taskDescription;
+    private RTextScrollPane taskCodeScrollPane;
     private Task task;
 
     public TaskSolutionDialogWrapper(boolean canBeParent) {
@@ -29,11 +31,11 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
         setTitle("IntelliSolve");
         setOKButtonText("Submit Solution");
         setResizable(false);
-        task = PluginSettings.getInstance().getState();
+        task = TaskState.getInstance().getState();
         if (task != null){
-            taskName = label(task.getName(), 50, true, SwingConstants.CENTER);
-            taskDescription = textArea(task.getDescription(), 15, false, false);
-            taskCode = codeTextArea(task.getMethodCode());
+            taskName = constructJBLabel(task.getName(), 40, true, SwingConstants.CENTER);
+            taskDescription = constructJTextArea(task.getDescription(), 15, false, false);
+            taskCodeScrollPane = constructRTextScrollPane(task.getMethodCode());
         }
         init();
     }
@@ -50,15 +52,12 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
         JPanel panel1 = new JPanel(new GridBagLayout());
         JPanel panel2 = new JPanel(new GridBagLayout());
 
-        panel1.add(taskDescription, gridBag.nextLine());
-        panel2.add(new RTextScrollPane(taskCode), gridBag.nextLine());
+        panel1.add(taskDescription, gridBag.anchor(GridBagConstraints.NORTHWEST).weighty(1.0));
+        panel2.add(taskCodeScrollPane);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel1, panel2);
-        splitPane.setDividerLocation(300);
-        splitPane.setDividerSize(0);
-        splitPane.setBorder(null);
-        panel.add(splitPane, gridBag.nextLine());
+        panel.add(constructJSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel1, panel2), gridBag.nextLine());
         panel.setMinimumSize(new Dimension(800, panel.getSize().height));
+
         return panel;
     }
 
@@ -66,7 +65,7 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
     public void doCancelAction() {
         task.setName(taskName.getText());
         task.setDescription(taskDescription.getText());
-        task.setMethodCode(taskCode.getText());
+        task.setMethodCode(taskCodeScrollPane.getTextArea().getText());
         super.doCancelAction();
     }
 
@@ -74,11 +73,11 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
     protected void doOKAction() {
         task.setName(taskName.getText());
         task.setDescription(taskDescription.getText());
-        task.setMethodCode(taskCode.getText());
+        task.setMethodCode(taskCodeScrollPane.getTextArea().getText());
         super.doOKAction();
     }
 
-    private JBLabel label(String text, int size, boolean bold, int alignment){
+    private JBLabel constructJBLabel(String text, int size, boolean bold, int alignment){
         JBLabel label = new JBLabel(text, alignment);
         label.setComponentStyle(UIUtil.ComponentStyle.LARGE);
         label.setFontColor(UIUtil.FontColor.BRIGHTER);
@@ -86,7 +85,7 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
         return label;
     }
 
-    private JTextArea textArea(String text, int size, boolean bold, boolean editable){
+    private JTextArea constructJTextArea(String text, int size, boolean bold, boolean editable){
         JTextArea textArea = new JTextArea(text);
         textArea.setFont(new Font(Font.DIALOG, bold ? Font.BOLD : Font.PLAIN, size));
         textArea.setLineWrap(true);
@@ -95,14 +94,31 @@ public class TaskSolutionDialogWrapper extends DialogWrapper {
         return textArea;
     }
 
-    private RSyntaxTextArea codeTextArea(String code) {
+    private RSyntaxTextArea constructRSyntaxTextArea(String code) {
         RSyntaxTextArea rSyntaxTextArea = new RSyntaxTextArea(15, 60);
         rSyntaxTextArea.setText(code);
         rSyntaxTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         rSyntaxTextArea.setCodeFoldingEnabled(true);
         rSyntaxTextArea.setAutoIndentEnabled(true);
         rSyntaxTextArea.setAntiAliasingEnabled(true);
-        rSyntaxTextArea.setBackground(JBColor.LIGHT_GRAY);
+        rSyntaxTextArea.setHighlightCurrentLine(false);
+        AutoCompletion autoCompletion = new AutoCompletion(new JavaCompletionProvider());
+        autoCompletion.install(rSyntaxTextArea);
         return rSyntaxTextArea;
+    }
+
+    private RTextScrollPane constructRTextScrollPane(String text){
+        RTextScrollPane scrollPane = new RTextScrollPane(constructRSyntaxTextArea(text));
+        scrollPane.setBorder(null);
+        return scrollPane;
+    }
+
+    @NotNull
+    private static JSplitPane constructJSplitPane(int splitOrientation, JPanel leftPanel, JPanel rightPanel) {
+        JSplitPane splitPane = new JSplitPane(splitOrientation, leftPanel, rightPanel);
+        splitPane.setDividerLocation(300);
+        splitPane.setDividerSize(0);
+        splitPane.setBorder(null);
+        return splitPane;
     }
 }

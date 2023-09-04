@@ -14,6 +14,7 @@ import com.intellisolve.intellisolveplugin.Model.Task;
 import com.intellisolve.intellisolveplugin.Util.IntelliSolveServerConnection;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -62,8 +63,7 @@ public class TaskSelectionDialogWrapper extends DialogWrapper {
     private void populateTaskSelectionTable() throws IOException {
         taskList = serverConnection.getAllTasks();
         DefaultTableModel tableModel = (DefaultTableModel) taskTable.getModel();
-        for (Task task:
-                taskList) {
+        for (Task task : taskList) {
             tableModel.addRow(new String[]{task.getId(), task.getName(), task.getDifficulty().name()});
         }
         taskTable.setModel(tableModel);

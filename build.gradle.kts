@@ -14,6 +14,7 @@ dependencies{
     implementation("com.fifesoft:rsyntaxtextarea:3.3.4")
     implementation("com.fifesoft:languagesupport:3.3.0")
     implementation("com.fifesoft:spellchecker:3.3.1")
+    implementation("org.javatuples:javatuples:1.2")
 }
 
 // Configure Gradle IntelliJ Plugin

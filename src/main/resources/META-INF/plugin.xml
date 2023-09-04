@@ -22,7 +22,7 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.intellisolve.intellisolveplugin.Util.PluginSettings"/>
+        <applicationService serviceImplementation="com.intellisolve.intellisolveplugin.Util.TaskState"/>
     </extensions>
 
     <actions>

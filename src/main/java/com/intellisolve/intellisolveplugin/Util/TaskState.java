@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @State(name = "TaskState", storages = {@Storage(value = "IntelliSolve-State.xml")})
-public class PluginSettings implements PersistentStateComponent<Task> {
+public class TaskState implements PersistentStateComponent<Task> {
 
     private Task task;
 
@@ -24,6 +24,6 @@ public class PluginSettings implements PersistentStateComponent<Task> {
     }
 
     public static PersistentStateComponent<Task> getInstance(){
-        return ServiceManager.getService(PluginSettings.class);
+        return ServiceManager.getService(TaskState.class);
     }
 }

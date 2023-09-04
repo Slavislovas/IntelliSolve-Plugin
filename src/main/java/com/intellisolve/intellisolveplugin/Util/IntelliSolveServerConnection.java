@@ -3,6 +3,7 @@ package com.intellisolve.intellisolveplugin.Util;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.intellisolve.intellisolveplugin.Model.CodeAnalysisResults;
 import com.intellisolve.intellisolveplugin.Model.Task;
+import org.javatuples.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class IntelliSolveServerConnection {
         return Arrays.asList(jsonMapper.readValue(content.toString(), Task[].class));
     }
 
-    public CodeAnalysisResults runTaskSolution(String taskId, String code) throws IOException {
+    public Pair<CodeAnalysisResults, String> runTaskSolution(String taskId, String code) throws IOException {
         URL url = new URL(address + "/task/run/" + taskId);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
@@ -47,15 +48,28 @@ public class IntelliSolveServerConnection {
         outputStream.write(code.getBytes(StandardCharsets.UTF_8));
         outputStream.close();
 
+        if (connection.getResponseCode() != 200){
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while((inputLine = in.readLine()) != null){
+                content.append(inputLine);
+            }
+            in.close();
+            return new Pair<>(null, content.toString());
+        }
+
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuilder content = new StringBuilder();
+
         while((inputLine = in.readLine()) != null){
             content.append(inputLine);
         }
+
         in.close();
         JsonMapper jsonMapper = JsonMapper.builder().build();
-        return jsonMapper.readValue(content.toString(), CodeAnalysisResults.class);
+        return new Pair<>(jsonMapper.readValue(content.toString(), CodeAnalysisResults.class), null);
     }
 
     public static IntelliSolveServerConnection getInstance(){

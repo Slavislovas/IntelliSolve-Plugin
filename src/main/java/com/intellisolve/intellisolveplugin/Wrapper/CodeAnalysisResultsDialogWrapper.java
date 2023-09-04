@@ -16,15 +16,14 @@ import java.awt.*;
 import java.io.IOException;
 
 public class CodeAnalysisResultsDialogWrapper extends DialogWrapper {
-    private String taskId;
-    private String code;
     private CodeAnalysisResults codeAnalysisResults;
     private IntelliSolveServerConnection serverConnection = IntelliSolveServerConnection.getInstance();
     private JPanel panel = new JPanel(new GridBagLayout());
-    public CodeAnalysisResultsDialogWrapper(boolean canBeParent, String taskId, String code) throws IOException {
+    public CodeAnalysisResultsDialogWrapper(boolean canBeParent, CodeAnalysisResults codeAnalysisResults) throws IOException {
         super(canBeParent);
-        codeAnalysisResults = serverConnection.runTaskSolution(taskId, code);
-        setOKButtonText(codeAnalysisResults.getPassed() ? "Return to Task List" : "Try Again");
+        this.codeAnalysisResults = codeAnalysisResults;
+        setOKButtonText(codeAnalysisResults.getPassed() ? "Complete Task" : "Try Again");
+        setCancelButtonText(codeAnalysisResults.getPassed() ? "Back" : "Return To Task Selection");
         init();
     }
 
